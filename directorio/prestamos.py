@@ -1,3 +1,7 @@
+"""
+CLIENTE
+"""
+
 # -*- coding: utf-8 -*-
 """
 Módulo de Lógica de Negocio.
@@ -47,8 +51,6 @@ def crear_cliente(
         nombres (str): Nombres del aprendiz.
         apellidos (str): Apellidos del aprendiz.
         email (str): Dirección de residencia.
-        telefono (int): Número de teléfono.
-        ficha (int): Número de la ficha del programa.
 
     Returns:
         Optional[Dict[str, Any]]: El diccionario del aprendiz creado o None si ya existía.
@@ -168,3 +170,4 @@ def eliminar_cliente(filepath: str, documento: str) -> bool:
         return True
 
     return False
+

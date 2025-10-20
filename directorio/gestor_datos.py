@@ -13,7 +13,7 @@ from typing import Any, Dict, List
 
 # Se define el orden de las columnas para los archivos.
 # Se añade 'tipo_documento' como nuevo campo.
-CAMPOS = ['id', 'tipo_documento', 'documento', 'nombres', 'apellidos', 'direccion', 'telefono', 'ficha']
+CAMPOS = ['id', 'documento', 'nombres', 'apellidos','email']
 
 def inicializar_archivo(filepath: str) -> None:
     """
@@ -77,3 +77,4 @@ def guardar_datos(filepath: str, datos: List[Dict[str, Any]]) -> None:
     elif filepath.endswith('.json'):
         with open(filepath, mode='w', encoding='utf-8') as json_file:
             json.dump(datos, json_file, indent=4)
+
