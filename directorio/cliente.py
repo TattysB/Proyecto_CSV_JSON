@@ -47,7 +47,6 @@ def crear_cliente(
 
     Args:
         filepath (str): Ruta al archivo de datos.
-        tipo_documento (str): Abreviatura del tipo de documento (ej. 'C.C').
         documento (int): Número de documento del aprendiz.
         nombres (str): Nombres del aprendiz.
         apellidos (str): Apellidos del aprendiz.

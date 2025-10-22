@@ -6,7 +6,7 @@ PRODUCTO
 
 from typing import Any, Dict, List, Optional
 
-import gestor_datos
+import gestor_datos2
 
 def generar_id_prodcuto(productos: List[Dict[str, Any]]) -> int:
     """
@@ -29,7 +29,7 @@ def crear_producto(
         filepath: str,
         id_producto: int,
         nombre: str,
-        precio: bool,
+        precio: float,
         stock: int,
 
 ) -> Optional[Dict[str, Any]]:
@@ -49,7 +49,7 @@ def crear_producto(
     Returns:
         Optional[Dict[str, Any]]: El diccionario del aprendiz creado o None si ya existía.
     """
-    productos = gestor_datos.cargar_datos(filepath)
+    productos = gestor_datos2.cargar_datos(filepath)
     str_documento = str(id_producto)
 
     if any(ap.get('documento') == str_documento for ap in productos):
@@ -60,7 +60,7 @@ def crear_producto(
 
     nuevo_producto = {
         'id': str(nuevo_id),
-        'id_producto': str_documento,
+        'ISDN': str_documento,
         'nombre': nombre,
         'precio': precio,
         'stock': stock,
@@ -68,7 +68,7 @@ def crear_producto(
     }
 
     productos.append(nuevo_producto)
-    gestor_datos.guardar_datos(filepath, productos)
+    gestor_datos2.guardar_datos(filepath, productos)
     return nuevo_producto
 
 
@@ -82,10 +82,10 @@ def leer_todos_los_productos(filepath: str) -> List[Dict[str, Any]]:
     Returns:
         List[Dict[str, Any]]: La lista de aprendices.
     """
-    return gestor_datos.cargar_datos(filepath)
+    return gestor_datos2.cargar_datos(filepath)
 
 
-def buscar_cliente_por_producto(filepath: str, documento: str) -> Optional[Dict[str, Any]]:
+def buscar_producto_por_isdn(filepath: str, documento: str) -> Optional[Dict[str, Any]]:
     """
     Busca un producto específico por su número de documento.
 
@@ -96,9 +96,9 @@ def buscar_cliente_por_producto(filepath: str, documento: str) -> Optional[Dict[
     Returns:
         Optional[Dict[str, Any]]: El diccionario del producto si se encuentra, de lo contrario None.
     """
-    productos = gestor_datos.cargar_datos(filepath)
+    productos = gestor_datos2.cargar_datos(filepath)
     for producto in productos:
-        if producto.get('documento') == documento:
+        if producto.get('ISDN') == documento:
             return producto
     return None
 
@@ -120,12 +120,12 @@ def actualizar_producto(
         Optional[Dict[str, Any]]: El diccionario del producto actualizado, o None si no se encontró.
     """
 
-    productos = gestor_datos.cargar_datos(filepath)
+    productos = gestor_datos2.cargar_datos(filepath)
     producto_encontrado = None
     indice = -1
 
     for i, producto in enumerate(productos):
-        if producto.get('documento') == documento:
+        if producto.get('ISDN') == documento:
             producto_encontrado = producto
             indice = i
             break
@@ -137,7 +137,7 @@ def actualizar_producto(
 
         producto_encontrado.update(datos_nuevos)
         productos[indice] = producto_encontrado
-        gestor_datos.guardar_datos(filepath, productos)
+        gestor_datos2.guardar_datos(filepath, productos)
         return producto_encontrado
 
     return None
@@ -154,17 +154,17 @@ def eliminar_producto(filepath: str, documento: str) -> bool:
     Returns:
         bool: True si el producto fue eliminado, False si no se encontró.
     """
-    productos = gestor_datos.cargar_datos(filepath)
+    productos = gestor_datos2.cargar_datos(filepath)
     producto_a_eliminar = None
 
     for producto in productos:
-        if producto.get('documento') == documento:
+        if producto.get('ISDN') == documento:
             producto_a_eliminar = producto
             break
 
     if producto_a_eliminar:
         productos.remove(producto_a_eliminar)
-        gestor_datos.guardar_datos(filepath, productos)
+        gestor_datos2.guardar_datos(filepath, productos)
         return True
 
     return False
