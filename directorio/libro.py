@@ -27,9 +27,9 @@ def generar_id_prodcuto(productos: List[Dict[str, Any]]) -> int:
 
 def crear_producto(
         filepath: str,
-        id_producto: int,
+        ISBN: int,
         nombre: str,
-        precio: float,
+        autor: str,
         stock: int,
 
 ) -> Optional[Dict[str, Any]]:
@@ -40,9 +40,10 @@ def crear_producto(
 
     Args:
         filepath (str): Ruta al archivo de datos.
-        id_producto (int): Número de documento del aprendiz.
+
+        ISBN (str) : código del libro
         nombre (str): Nombres del aprendiz.
-        precio (str): Apellidos del aprendiz.
+        autor (str): Apellidos del aprendiz.
         stock (str): Dirección de residencia.
 
 
@@ -50,7 +51,7 @@ def crear_producto(
         Optional[Dict[str, Any]]: El diccionario del aprendiz creado o None si ya existía.
     """
     productos = gestor_datos2.cargar_datos(filepath)
-    str_documento = str(id_producto)
+    str_documento = str(ISBN)
 
     if any(ap.get('documento') == str_documento for ap in productos):
         print(f"\n❌ Error: El documento '{str_documento}' ya se encuentra registrado.")
@@ -60,9 +61,9 @@ def crear_producto(
 
     nuevo_producto = {
         'id': str(nuevo_id),
-        'ISDN': str_documento,
+        'ISBN': str_documento,
         'nombre': nombre,
-        'precio': precio,
+        'autor': autor,
         'stock': stock,
 
     }
@@ -98,7 +99,7 @@ def buscar_producto_por_isdn(filepath: str, documento: str) -> Optional[Dict[str
     """
     productos = gestor_datos2.cargar_datos(filepath)
     for producto in productos:
-        if producto.get('ISDN') == documento:
+        if producto.get('ISBN') == documento:
             return producto
     return None
 
@@ -125,7 +126,7 @@ def actualizar_producto(
     indice = -1
 
     for i, producto in enumerate(productos):
-        if producto.get('ISDN') == documento:
+        if producto.get('ISBN') == documento:
             producto_encontrado = producto
             indice = i
             break
@@ -158,7 +159,7 @@ def eliminar_producto(filepath: str, documento: str) -> bool:
     producto_a_eliminar = None
 
     for producto in productos:
-        if producto.get('ISDN') == documento:
+        if producto.get('ISBN') == documento:
             producto_a_eliminar = producto
             break
 

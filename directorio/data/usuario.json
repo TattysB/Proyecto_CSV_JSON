@@ -1,0 +1,9 @@
+[
+    {
+        "id": "1",
+        "documento": "123",
+        "nombres": "pepe",
+        "apellidos": "perez",
+        "email": "perez@gmail.com"
+    }
+]
