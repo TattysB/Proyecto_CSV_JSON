@@ -9,8 +9,9 @@ Guarda los datos en un archivo JSON.
 
 from datetime import date
 import gestor_datos
-import cliente
-import producto
+import gestor_datos3
+import usuario
+import libro
 
 def realizar_prestamo(archivo_prestamo:str,archivo_cliente:str,archivo_producto:str,id_cliente:str,id_producto:str):
 
@@ -19,7 +20,7 @@ def realizar_prestamo(archivo_prestamo:str,archivo_cliente:str,archivo_producto:
     Args:
         archivo_prestamo (str): Ruta del archivo JSON de préstamos.
         archivo_cliente (str): Ruta del archivo CSV de clientes.
-        archivo_producto (str): Ruta del archivo CSV de productos.
+        archivo_producto (str): Ruta del archivo CSV de producto.
         id_cliente (str): ID del cliente que solicita el préstamo.
         id_producto (str): ID del producto que se prestará.
 
@@ -29,7 +30,7 @@ def realizar_prestamo(archivo_prestamo:str,archivo_cliente:str,archivo_producto:
 
 
     prestamos=gestor_datos.cargar_datos(archivo_prestamo)
-    productos=gestor_datos.cargar_datos(archivo_producto)
+    producto=gestor_datos.cargar_datos(archivo_producto)
 
     usuario=cliente.buscar_cliente_por_documento(archivo_cliente,id_cliente)
     if not usuario:
@@ -57,7 +58,7 @@ def realizar_prestamo(archivo_prestamo:str,archivo_cliente:str,archivo_producto:
     prestamos.append(nuevo_prestamo)
 
     prod['stock']=str(int(prod['stock'])-1)
-    gestor_datos.guardar_datos(archivo_producto,productos)
+    gestor_datos.guardar_datos(archivo_producto,producto)
 
     gestor_datos.guardar_datos(archivo_prestamo,prestamos)
     print("✅ Prestamo registrado con éxito")
@@ -97,7 +98,7 @@ def registrar_devolucion(archivo_prestamo: str, archivo_productos: str, id_prest
         prod['stock']=str(int(prod['stock'])+1)
 
     gestor_datos.guardar_datos(archivo_prestamo,prestamos)
-    gestor_datos.guardar_datos(archivo_productos,producto)
+    gestor_datos3.guardar_datos(archivo_productos,producto)
 
     print("✅ Devolución registrada correctamente")
     return prestamo

@@ -1,0 +1,9 @@
+[
+    {
+        "id": "1",
+        "ISBN": "123",
+        "nombre": "lele",
+        "autor": "polo",
+        "stock": "1"
+    }
+]
