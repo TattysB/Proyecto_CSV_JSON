@@ -264,13 +264,15 @@ def menu_eliminar_producto(filepath: str):
         default=False
     )
 
-    if confirmacion:
-        if libro.eliminar_producto(filepath, str(documento)):
-            console.print(Panel("✅ ¡Producto eliminado con éxito!", border_style="green", title="Éxito"))
-        else:
-            console.print(Panel("❌ Ocurrió un error al eliminar.", border_style="red", title="Error"))
+
+if confirmacion:
+    if libro.eliminar_producto(filepath, str(documento)):
+        console.print(Panel("✅ ¡Producto eliminado con éxito!", border_style="green", title="Éxito"))
     else:
-        console.print("\n[yellow]Operación cancelada.[/yellow]")
+        console.print(Panel("❌ Ocurrió un error al eliminar.", border_style="red", title="Error"))
+else:
+    console.print("\n[yellow]Operación cancelada.[/yellow]")
+
 
 def elegir_almacenamiento2() -> str:
     """Pregunta al usuario qué formato de archivo desea usar y construye la ruta."""
@@ -294,7 +296,8 @@ def elegir_almacenamiento2() -> str:
     else:
         return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON2)
 
-#----PRÉSTAMO----
+    # ----PRÉSTAMO----
+
 
 def menu_crear_prestamo(filepath: str):
     """Maneja la lógica para registrar un nuevo préstamo"""
@@ -305,13 +308,11 @@ def menu_crear_prestamo(filepath: str):
 
     prestamo_creado = prestamos.realizar_prestamo(
         os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON3),  # préstamos
-        os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON),   # clientes
+        os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON),  # clientes
         os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON2),  # productos
         id_cliente,
         id_producto
     )
-
-
 
     if prestamo_creado:
         console.print(Panel.fit(
@@ -325,25 +326,25 @@ def menu_crear_prestamo(filepath: str):
         ))
 
 
-def menu_registrar_devolucion(filepath:str):
+def menu_registrar_devolucion(filepath: str):
     """Maneja la lógica para registrar la devolucion """
     console.print(Panel.fit("[bold cyan]📦 Registrar devolución[/bold cyan]"))
 
-    id_prestamo=Prompt.ask("id_prestamo")
+    id_prestamo = Prompt.ask("id_prestamo")
 
-    devolucion_creado=prestamos.registrar_devolucion(filepath,id_prestamo)
+    devolucion_creado = prestamos.registrar_devolucion(filepath, id_prestamo)
 
     if devolucion_creado:
         console.print(Panel.fit(
-             f"\n✅ ¡Devolución registrada correctamente!\n ID Asignado: [bold yellow] {devolucion_creado['id']}[/bold yellow] ",
-             border_style="green",title="Éxito" ))
+            f"\n✅ ¡Devolución registrada correctamente!\n ID Asignado: [bold yellow] {devolucion_creado['id']}[/bold yellow] ",
+            border_style="green", title="Éxito"))
     else:
         console.print(Panel.fit(
             f"\n❌  No se encontró el préstamo o ya fue devuelto",
-            border_style="red",title="Error" ))
+            border_style="red", title="Error"))
 
 
-def elegir_almacenamiento3()->str:
+def elegir_almacenamiento3() -> str:
     """Pregunta al usuario qué formato de archivo desea usar y construye la ruta."""
     console.print(Panel.fit("[bold cyan]⚙️ Configuración de Almacenamiento[/bold cyan]"))
 
@@ -365,8 +366,8 @@ def elegir_almacenamiento3()->str:
     else:
         return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON3)
 
+    # --- LISTAS DE OPCIONES ---
 
-# --- LISTAS DE OPCIONES ---
 
 def menu_clientes():
     """Imprime el menú principal en la consola usando un Panel de Rich."""
@@ -379,8 +380,8 @@ def menu_clientes():
     )
     console.print(Panel(menu_c, title="[bold]CLIENTES[/bold]", subtitle="Seleccione una opción", border_style="green"))
 
-def menu_productos():
 
+def menu_productos():
     menu_p = (
         "[bold yellow]1[/bold yellow]. Registrar un nuevo producto\n"
         "[bold yellow]2[/bold yellow]. Ver todos los producto\n"
@@ -391,8 +392,9 @@ def menu_productos():
     console.print(
         Panel(menu_p, title="[bold]CLIENTES[/bold]", subtitle="Seleccione una opción", border_style="green"))
 
+
 def menu_prestamos():
-    menu_pre=(
+    menu_pre = (
         "[bold yellow]1[/bold yellow]. Registrar un nuevo préstamo\n"
         "[bold yellow]2[/bold yellow]. Resgistrar devolución\n"
         "[bold red]3[/bold red]. Salir"
@@ -400,9 +402,9 @@ def menu_prestamos():
     console.print(
         Panel(menu_pre, title="[bold]PRÉSTAMOS[/bold]", subtitle="Seleccione una opción", border_style="green"))
 
+
 def main():
     """Función principal que ejecuta el bucle del menú."""
-
 
     while True:
         console.print("[yellow]1.[/yellow] Gestionar Clientes")
@@ -410,7 +412,7 @@ def main():
         console.print("[yellow]3.[/yellow] Gestionar Préstamos")
         console.print("[yellow]4.[/yellow] Salir")
 
-        opcion_principal = Prompt.ask("Selecciona una opción", choices=["1", "2", "3","4"], show_choices=False)
+        opcion_principal = Prompt.ask("Selecciona una opción", choices=["1", "2", "3", "4"], show_choices=False)
 
         if opcion_principal == '1':
 
@@ -456,10 +458,10 @@ def main():
         elif opcion_principal == '3':
             archivo_seleccionado = elegir_almacenamiento3()
             console.print(f"\n👍 Usando el archivo: [bold green]{archivo_seleccionado}[/bold green]")
-            #MENU PRÉSTAMOS
+            # MENU PRÉSTAMOS
             while True:
                 menu_prestamos()
-                opcion=Prompt.ask("Opción",choices=["1","2","3"],show_choices=False)
+                opcion = Prompt.ask("Opción", choices=["1", "2", "3"], show_choices=False)
 
                 if opcion == '1':
                     menu_crear_prestamo(archivo_seleccionado)
@@ -472,7 +474,9 @@ def main():
             console.print("\n[bold magenta]👋 ¡Hasta luego! Gracias por usar la agenda.[/bold magenta]")
             break
 
-# --- Punto de Entrada del Script ---
+    # --- Punto de Entrada del Script ---
+
+
 if __name__ == "__main__":
     try:
         main()
