@@ -1,0 +1,23 @@
+[
+    {
+        "id_prestamo": 1,
+        "id_usuario": "1193",
+        "id_libro": "123",
+        "fecha": "2025-10-24",
+        "estado": "devuelto"
+    },
+    {
+        "id_prestamo": 2,
+        "id_usuario": "1193",
+        "id_libro": "123",
+        "fecha": "2025-10-24",
+        "estado": "prestado"
+    },
+    {
+        "id_prestamo": 3,
+        "id_usuario": "1193",
+        "id_libro": "123",
+        "fecha": "2025-10-27",
+        "estado": "prestado"
+    }
+]

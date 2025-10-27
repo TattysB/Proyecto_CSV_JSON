@@ -40,7 +40,7 @@ def menu_crear_cliente(filepath: str):
     apellidos = Prompt.ask("Apellidos")
     email = Prompt.ask("Email")
 
-    cliente_creado = usuario.crear_cliente(
+    cliente_creado = usuario.crear_usuario(
         filepath, documento, nombres, apellidos, email
     )
 
@@ -54,7 +54,7 @@ def menu_crear_cliente(filepath: str):
 def menu_leer_clientes(filepath: str):
     """Maneja la lógica para mostrar todos los clientes en una tabla."""
     console.print(Panel.fit("[bold cyan]👥 Lista de usuarios[/bold cyan]"))
-    clientes = usuario.leer_todos_los_clientes(filepath)
+    clientes = usuario.leer_todos_los_usuario(filepath)
 
     if not clientes:
         console.print("[yellow]No hay usuarios registrados.[/yellow]")
@@ -86,7 +86,7 @@ def menu_actualizar_cliente(filepath: str):
     console.print(Panel.fit("[bold cyan]✏️ Actualizar Datos del Usuario[/bold cyan]"))
     documento = IntPrompt.ask("Ingrese el Documento del usuario a actualizar")
 
-    cliente_actual = usuario.buscar_cliente_por_documento(filepath, str(documento))
+    cliente_actual = usuario.buscar_usuario_por_documento(filepath, str(documento))
     if not cliente_actual:
         console.print("\n[bold red]❌ No se encontró ningún usuario con ese documento.[/bold red]")
         return
@@ -107,7 +107,7 @@ def menu_actualizar_cliente(filepath: str):
         console.print("\n[yellow]No se modificó ningún dato.[/yellow]")
         return
 
-    cliente_actualizado = usuario.actualizar_cliente(filepath, str(documento), datos_nuevos)
+    cliente_actualizado = usuario.actualizar_usuario(filepath, str(documento), datos_nuevos)
     if cliente_actualizado:
         console.print(Panel("✅ ¡Datos del usuario actualizados con éxito!", border_style="green", title="Éxito"))
     else:
@@ -118,7 +118,7 @@ def menu_eliminar_cliente(filepath: str):
     console.print(Panel.fit("[bold cyan]🗑️ Eliminar usuario[/bold cyan]"))
     documento = IntPrompt.ask("Ingrese el Documento del usuario a eliminar")
 
-    clientes = usuario.buscar_cliente_por_documento(filepath, str(documento))
+    clientes = usuario.buscar_usuario_por_documento(filepath, str(documento))
     if not clientes:
         console.print("\n[bold red]❌ No se encontró ningún usuario con ese documento.[/bold red]")
         return
@@ -129,7 +129,7 @@ def menu_eliminar_cliente(filepath: str):
     )
 
     if confirmacion:
-        if usuario.eliminar_cliente(filepath, str(documento)):
+        if usuario.eliminar_usuario(filepath, str(documento)):
             console.print(Panel("✅ ¡Usuario eliminado con éxito!", border_style="green", title="Éxito"))
         else:
             console.print(Panel("❌ Ocurrió un error al eliminar.", border_style="red", title="Error"))
@@ -169,7 +169,7 @@ def menu_crear_producto(filepath: str):
     autor = Prompt.ask("Autor")
     stock = IntPrompt.ask("Stock")
 
-    producto_creado = libro.crear_producto(
+    producto_creado = libro.crear_libro(
         filepath, id_producto, nombre, autor, stock
     )
 
@@ -184,7 +184,7 @@ def menu_crear_producto(filepath: str):
 def menu_leer_productos(filepath: str):
     """Maneja la lógica para mostrar todos los productos en una tabla."""
     console.print(Panel.fit("[bold cyan]📦 Lista de libro[/bold cyan]"))
-    productos = libro.leer_todos_los_productos(filepath)
+    productos = libro.leer_todos_los_libros(filepath)
 
     if not productos:
         console.print("[yellow]No hay productos registrados.[/yellow]")
@@ -216,7 +216,7 @@ def menu_actualizar_producto(filepath: str):
     console.print(Panel.fit("[bold cyan]✏️ Actualizar Datos del Libro[/bold cyan]"))
     documento = IntPrompt.ask("Ingrese el ISBN del producto a actualizar")
 
-    producto_actual = libro.buscar_producto_por_isdn(filepath, str(documento))
+    producto_actual = libro.buscar_libro_por_isbn(filepath, str(documento))
     if not producto_actual:
         console.print("\n[bold red]❌ No se encontró ningún producto con ese ISBN.[/bold red]")
         return
@@ -237,7 +237,7 @@ def menu_actualizar_producto(filepath: str):
         console.print("\n[yellow]No se modificó ningún dato.[/yellow]")
         return
 
-    producto_actualizado = libro.actualizar_producto(filepath, str(documento), datos_nuevos)
+    producto_actualizado = libro.actualizar_libro(filepath, str(documento), datos_nuevos)
     if producto_actualizado:
         console.print(Panel("✅ ¡Datos del libro actualizados con éxito!", border_style="green", title="Éxito"))
     else:
@@ -248,7 +248,7 @@ def menu_eliminar_producto(filepath: str):
     console.print(Panel.fit("[bold cyan]🗑️ Eliminar libro[/bold cyan]"))
     documento = IntPrompt.ask("Ingrese el ISBN del libro a eliminar")
 
-    productos = libro.buscar_producto_por_isdn(filepath, str(documento))
+    productos = libro.buscar_libro_por_isbn(filepath, str(documento))
     if not productos:
         console.print("\n[bold red]❌ No se encontró ningún producto con ese ISBN.[/bold red]")
         return
@@ -259,7 +259,7 @@ def menu_eliminar_producto(filepath: str):
     )
 
     if confirmacion:
-        if libro.eliminar_producto(filepath, str(documento)):
+        if libro.eliminar_libro(filepath, str(documento)):
             console.print(Panel("✅ ¡Libro eliminado con éxito!", border_style="green", title="Éxito"))
         else:
             console.print(Panel("❌ Ocurrió un error al eliminar.", border_style="red", title="Error"))

@@ -23,58 +23,67 @@ from rich.table import Table
 # --- Inicialización de la Consola de Rich ---
 console = Console()
 
-# --- Constantes de Configuración de Rutas ---
-DIRECTORIO_DATOS = 'data'
-NOMBRE_ARCHIVO_CSV = 'clientes.csv'
-NOMBRE_ARCHIVO_JSON = 'clientes.json'
-NOMBRE_ARCHIVO_CSV2 = 'productos.csv'
-NOMBRE_ARCHIVO_JSON2 = 'productos.json'
-NOMBRE_ARCHIVO_CSV3 = 'préstamos.csv'
-NOMBRE_ARCHIVO_JSON3 = 'préstamos.json'
+
+# Ruta base (donde está este archivo main2.py)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Carpeta de datos dentro del directorio
+DIRECTORIO_DATOS = os.path.join(BASE_DIR, "data")
+
+# Crear carpeta data si no existe
+os.makedirs(DIRECTORIO_DATOS, exist_ok=True)
+
+# Archivos dentro de esa carpeta
+ARCHIVO_USUARIOS_JSON = os.path.join(DIRECTORIO_DATOS, "usuario.json")
+ARCHIVO_USUARIOS_CSV = os.path.join(DIRECTORIO_DATOS, "usuario.csv")
+ARCHIVO_LIBROS_JSON = os.path.join(DIRECTORIO_DATOS, "libro.json")
+ARCHIVO_LIBROS_CSV = os.path.join(DIRECTORIO_DATOS, "libro.csv")
+ARCHIVO_PRESTAMOS_JSON = os.path.join(DIRECTORIO_DATOS, "prestamo.json")
+ARCHIVO_PRESTAMOS_CSV = os.path.join(DIRECTORIO_DATOS, "prestamo.csv")
 
 
 
-# --- CLIENTES ---
-def menu_crear_cliente(filepath: str):
+# --- USUARIOS ---
+def menu_crear_usuario(filepath: str):
     """Maneja la lógica para registrar un nuevo aprendiz."""
-    console.print(Panel.fit("[bold cyan]📝 Registrar Nuevo Cliente[/bold cyan]"))
+    console.print(Panel.fit("[bold cyan]📝 Registrar Nuevo Usuario[/bold cyan]"))
 
     documento = IntPrompt.ask("Número de Documento")
     nombres = Prompt.ask("Nombres")
     apellidos = Prompt.ask("Apellidos")
     email = Prompt.ask("Email")
 
-    cliente_creado = cliente.crear_cliente(
+    usuario_creado = usuario.crear_usuario(
         filepath, documento, nombres, apellidos, email
     )
 
-    if cliente_creado:
-        console.print(Panel(f"✅ ¡Cliente registrado con éxito!\n   ID Asignado: [bold yellow]{cliente_creado['id']}[/bold yellow]",
+    if usuario_creado:
+        console.print(Panel(f"✅ ¡Usuario registrado con éxito!\n   ID Asignado: [bold yellow]{usuario_creado['id']}[/bold yellow]",
                             border_style="green", title="Éxito"))
     else:
-        console.print(Panel("⚠️ No se pudo registrar al cliente. Verifique los datos.",
+        console.print(Panel("⚠️ No se pudo registrar al usuario. Verifique los datos.",
                             border_style="red", title="Error"))
 
-def menu_leer_clientes(filepath: str):
-    """Maneja la lógica para mostrar todos los clientes en una tabla."""
-    console.print(Panel.fit("[bold cyan]👥 Lista de clientes[/bold cyan]"))
-    clientes = cliente.leer_todos_los_clientes(filepath)
+def menu_leer_usuario(filepath: str):
+    """Maneja la lógica para mostrar todos los usuarios en una tabla."""
+    console.print(Panel.fit("[bold cyan]👥 Lista de usuarios[/bold cyan]"))
+    usuarios = usuario.leer_todos_los_usuario(filepath)
 
-    if not clientes:
-        console.print("[yellow]No hay clientes registrados.[/yellow]")
+    if not usuarios:
+        console.print("[yellow]No hay usuarios registrados.[/yellow]")
         return
 
     # Creamos la tabla
-    tabla = Table(title="Clientes Registrados", border_style="blue", show_header=True, header_style="bold magenta")
+    tabla = Table(title="Usuarios Registrados", border_style="blue", show_header=True, header_style="bold magenta")
     tabla.add_column("ID", style="dim", width=5)
     tabla.add_column("Documento", justify="right")
     tabla.add_column("Nombre Completo")
     tabla.add_column("email", justify="right")
 
     # Ordenamos por Ficha y luego por ID
-    clientes_ordenados = sorted(clientes, key=lambda x: (int(x['documento']), int(x['id'])))
+    usuarios_ordenados = sorted(usuarios, key=lambda x: (int(x['documento']), int(x['id'])))
 
-    for ap in clientes_ordenados:
+    for ap in usuarios_ordenados:
 
         tabla.add_row(
             ap['id'],
@@ -85,56 +94,56 @@ def menu_leer_clientes(filepath: str):
 
     console.print(tabla)
 
-def menu_actualizar_cliente(filepath: str):
-    """Maneja la lógica para actualizar un aprendiz."""
-    console.print(Panel.fit("[bold cyan]✏️ Actualizar Datos del Cliente[/bold cyan]"))
-    documento = IntPrompt.ask("Ingrese el Documento del cliente a actualizar")
+def menu_actualizar_usuario(filepath: str):
+    """Maneja la lógica para actualizar un usuario."""
+    console.print(Panel.fit("[bold cyan]✏️ Actualizar Datos del Usuario[/bold cyan]"))
+    documento = IntPrompt.ask("Ingrese el Documento del usuario a actualizar")
 
-    cliente_actual = cliente.buscar_cliente_por_documento(filepath, str(documento))
-    if not cliente_actual:
-        console.print("\n[bold red]❌ No se encontró ningún cliente con ese documento.[/bold red]")
+    usuario_actual = usuario.buscar_usuario_por_documento(filepath, str(documento))
+    if not usuario_actual:
+        console.print("\n[bold red]❌ No se encontró ningún usuario con ese documento.[/bold red]")
         return
 
     console.print("\nDatos actuales. Presione Enter para no modificar un campo.")
     datos_nuevos = {}
 
-    nombres = Prompt.ask(f"Nombres ({cliente_actual['nombres']})", default=cliente_actual['nombres'])
-    if nombres != cliente_actual['nombres']: datos_nuevos['nombres'] = nombres
+    nombres = Prompt.ask(f"Nombres ({usuario_actual['nombres']})", default=usuario_actual['nombres'])
+    if nombres != usuario_actual['nombres']: datos_nuevos['nombres'] = nombres
 
-    apellidos = Prompt.ask(f"Apellidos ({cliente_actual['apellidos']})", default=cliente_actual['apellidos'])
-    if apellidos != cliente_actual['apellidos']: datos_nuevos['apellidos'] = apellidos
+    apellidos = Prompt.ask(f"Apellidos ({usuario_actual['apellidos']})", default=usuario_actual['apellidos'])
+    if apellidos != usuario_actual['apellidos']: datos_nuevos['apellidos'] = apellidos
 
-    email = Prompt.ask(f"Email ({cliente_actual['email']})", default=(cliente_actual['email']))
-    if email != (cliente_actual['email']): datos_nuevos['email'] = email
+    email = Prompt.ask(f"Email ({usuario_actual['email']})", default=(usuario_actual['email']))
+    if email != (usuario_actual['email']): datos_nuevos['email'] = email
 
     if not datos_nuevos:
         console.print("\n[yellow]No se modificó ningún dato.[/yellow]")
         return
 
-    cliente_actualizado = cliente.actualizar_cliente(filepath, str(documento), datos_nuevos)
-    if cliente_actualizado:
-        console.print(Panel("✅ ¡Datos del cliente actualizados con éxito!", border_style="green", title="Éxito"))
+    usuario_actualizado = usuario.actualizar_usuario(filepath, str(documento), datos_nuevos)
+    if usuario_actualizado:
+        console.print(Panel("✅ ¡Datos del usuario actualizados con éxito!", border_style="green", title="Éxito"))
     else:
         console.print(Panel("❌ Ocurrió un error al actualizar.", border_style="red", title="Error"))
 
-def menu_eliminar_cliente(filepath: str):
-    """Maneja la lógica para eliminar un clientes."""
-    console.print(Panel.fit("[bold cyan]🗑️ Eliminar Aprendiz[/bold cyan]"))
-    documento = IntPrompt.ask("Ingrese el Documento del clientes a eliminar")
+def menu_eliminar_usuario(filepath: str):
+    """Maneja la lógica para eliminar un usuario."""
+    console.print(Panel.fit("[bold cyan]🗑️ Eliminar Usuario[/bold cyan]"))
+    documento = IntPrompt.ask("Ingrese el Documento del usuario a eliminar")
 
-    clientes = cliente.buscar_cliente_por_documento(filepath, str(documento))
-    if not clientes:
-        console.print("\n[bold red]❌ No se encontró ningún clientes con ese documento.[/bold red]")
+    usuarios = usuario.buscar_usuario_por_documento(filepath, str(documento))
+    if not usuarios:
+        console.print("\n[bold red]❌ No se encontró ningún usuario con ese documento.[/bold red]")
         return
 
     confirmacion = Confirm.ask(
-        f"¿Está seguro de que desea eliminar a [bold]{clientes['nombres']} {clientes['apellidos']}[/bold]?",
+        f"¿Está seguro de que desea eliminar a [bold]{usuarios['nombres']} {usuarios['apellidos']}[/bold]?",
         default=False
     )
 
     if confirmacion:
-        if cliente.eliminar_cliente(filepath, str(documento)):
-            console.print(Panel("✅ ¡Cliente eliminado con éxito!", border_style="green", title="Éxito"))
+        if usuario.eliminar_usuario(filepath, str(documento)):
+            console.print(Panel("✅ ¡Usuario eliminado con éxito!", border_style="green", title="Éxito"))
         else:
             console.print(Panel("❌ Ocurrió un error al eliminar.", border_style="red", title="Error"))
     else:
@@ -158,115 +167,115 @@ def elegir_almacenamiento() -> str:
         show_choices=False
     )
     if opcion == '1':
-        return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_CSV)
+        return os.path.join(DIRECTORIO_DATOS, ARCHIVO_USUARIOS_JSON)
     else:
-        return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON)
+        return os.path.join(DIRECTORIO_DATOS, ARCHIVO_USUARIOS_CSV)
 
-# --- PRODUCTO ---
+# --- LIBRO ---
 
-def menu_crear_producto(filepath: str):
-    """Maneja la lógica para registrar un nuevo aprendiz."""
-    console.print(Panel.fit("[bold cyan]📝 Registrar Nuevo Producto[/bold cyan]"))
+def menu_crear_libro(filepath: str):
+    """Maneja la lógica para registrar un nuevo libro."""
+    console.print(Panel.fit("[bold cyan]📝 Registrar Nuevo Libro[/bold cyan]"))
 
-    id_producto = IntPrompt.ask("ISDN")
+    id_libro = IntPrompt.ask("ISBN")
     nombre = Prompt.ask("Nombre")
-    precio = FloatPrompt.ask("Precio")
+    autor = Prompt.ask("Autor")
     stock = IntPrompt.ask("Stock")
 
-    producto_creado = libro.crear_producto(
-        filepath, id_producto, nombre, precio, stock
+    libro_creado = libro.crear_libro(
+        filepath, id_libro, nombre, autor, stock
     )
 
-    if producto_creado:
+    if libro_creado:
         console.print(Panel(
-            f"✅ ¡Producto registrado con éxito!\n   ID Asignado: [bold yellow]{producto_creado['id']}[/bold yellow]",
+            f"✅ ¡Libro registrado con éxito!\n   ID Asignado: [bold yellow]{libro_creado['id']}[/bold yellow]",
             border_style="green", title="Éxito"))
     else:
-        console.print(Panel("⚠️ No se pudo registrar el prodcuto. Verifique los datos.",
+        console.print(Panel("⚠️ No se pudo registrar el libro. Verifique los datos.",
                             border_style="red", title="Error"))
 
-def menu_leer_productos(filepath: str):
-    """Maneja la lógica para mostrar todos los productos en una tabla."""
-    console.print(Panel.fit("[bold cyan]👥 Lista de productos[/bold cyan]"))
-    productos = libro.leer_todos_los_productos(filepath)
+def menu_leer_libros(filepath: str):
+    """Maneja la lógica para mostrar todos los libros ."""
+    console.print(Panel.fit("[bold cyan]👥 Lista de libros[/bold cyan]"))
+    libros = libro.leer_todos_los_libros(filepath)
 
-    if not productos:
-        console.print("[yellow]No hay productos registrados.[/yellow]")
+    if not libros:
+        console.print("[yellow]No hay libros registrados.[/yellow]")
         return
 
     # Creamos la tabla
-    tabla = Table(title="Clientes Registrados", border_style="blue", show_header=True, header_style="bold magenta")
+    tabla = Table(title="Libros Registrados", border_style="blue", show_header=True, header_style="bold magenta")
     tabla.add_column("ID", style="dim", width=5)
-    tabla.add_column("ISDN", justify="right")
+    tabla.add_column("ISBN", justify="right")
     tabla.add_column("nombre")
-    tabla.add_column("precio")
+    tabla.add_column("autor")
     tabla.add_column("stock", justify="right")
 
     # Ordenamos por Ficha y luego por ID
-    productos_ordenados = sorted(productos, key=lambda x: (int(x['ISDN']), int(x['id'])))
+    libros_ordenados = sorted(libros, key=lambda x: (int(x['ISBN']), int(x['id'])))
 
-    for ap in productos_ordenados:
+    for ap in libros_ordenados:
 
         tabla.add_row(
-            ap['id'],
-            ap['ISDN'],
-            ap['nombre'],
-            ap['precio'],
-            ap['stock'],
+            str(ap['id']),
+            str(ap['ISBN']),
+            str(ap['nombre']),
+            str(ap['autor']),
+            str(ap['stock']),
         )
 
     console.print(tabla)
 
-def menu_actualizar_producto(filepath: str):
-    """Maneja la lógica para actualizar un aprendiz."""
-    console.print(Panel.fit("[bold cyan]✏️ Actualizar Datos del Producto[/bold cyan]"))
-    documento = IntPrompt.ask("Ingrese el ISDN del producto a actualizar")
+def menu_actualizar_libro(filepath: str):
+    """Maneja la lógica para actualizar un libro."""
+    console.print(Panel.fit("[bold cyan]✏️ Actualizar Datos del Libro[/bold cyan]"))
+    documento = IntPrompt.ask("Ingrese el ISBN del libro a actualizar")
 
-    producto_actual = libro.buscar_producto_por_isdn(filepath, str(documento))
-    if not producto_actual:
-        console.print("\n[bold red]❌ No se encontró ningún producto con ese ISDN.[/bold red]")
+    libro_actual = libro.buscar_libro_por_isbn(filepath, str(documento))
+    if not libro_actual:
+        console.print("\n[bold red]❌ No se encontró ningún libro con ese ISBN.[/bold red]")
         return
 
     console.print("\nDatos actuales. Presione Enter para no modificar un campo.")
     datos_nuevos = {}
 
-    nombre = Prompt.ask(f"Nombre ({producto_actual['nombre']})", default=producto_actual['nombre'])
-    if nombre != producto_actual['nombre']: datos_nuevos['nombre'] = nombre
+    nombre = Prompt.ask(f"Nombre ({libro_actual['nombre']})", default=libro_actual['nombre'])
+    if nombre != libro_actual['nombre']: datos_nuevos['nombre'] = nombre
 
-    precio = FloatPrompt.ask(f"Precio ({producto_actual['precio']})", default=producto_actual['precio'])
-    if precio != producto_actual['precio']: datos_nuevos['precio'] = precio
+    autor = Prompt.ask(f"Autor ({libro_actual['autor']})", default=libro_actual['autor'])
+    if autor != libro_actual['autor']: datos_nuevos['autor'] = autor
 
-    stock = IntPrompt.ask(f"Stock ({producto_actual['stock']})", default=(producto_actual['stock']))
-    if stock != (producto_actual['stock']): datos_nuevos['stock'] = stock
+    stock = IntPrompt.ask(f"Stock ({libro_actual['stock']})", default=(libro_actual['stock']))
+    if stock != (libro_actual['stock']): datos_nuevos['stock'] = stock
 
     if not datos_nuevos:
         console.print("\n[yellow]No se modificó ningún dato.[/yellow]")
         return
 
-    producto_actualizado = libro.actualizar_producto(filepath, str(documento), datos_nuevos)
-    if producto_actualizado:
-        console.print(Panel("✅ ¡Datos del cliente actualizados con éxito!", border_style="green", title="Éxito"))
+    libro_actualizado = libro.actualizar_libro(filepath, str(documento), datos_nuevos)
+    if libro_actualizado:
+        console.print(Panel("✅ ¡Datos del libro actualizados con éxito!", border_style="green", title="Éxito"))
     else:
         console.print(Panel("❌ Ocurrió un error al actualizar.", border_style="red", title="Error"))
 
-def menu_eliminar_producto(filepath: str):
-    """Maneja la lógica para eliminar un clientes."""
-    console.print(Panel.fit("[bold cyan]🗑️ Eliminar Aprendiz[/bold cyan]"))
-    documento = IntPrompt.ask("Ingrese el Documento del clientes a eliminar")
+def menu_eliminar_libro(filepath: str):
+    """Maneja la lógica para eliminar un libro."""
+    console.print(Panel.fit("[bold cyan]🗑️ Eliminar Libro[/bold cyan]"))
+    documento = IntPrompt.ask("Ingrese el Documento del libro a eliminar")
 
-    productos = libro.buscar_producto_por_isdn(filepath, str(documento))
-    if not productos:
-        console.print("\n[bold red]❌ No se encontró ningún producto con ese ISDN.[/bold red]")
+    libros = libro.buscar_libro_por_isbn(filepath, str(documento))
+    if not libros:
+        console.print("\n[bold red]❌ No se encontró ningún libro con ese ISBN.[/bold red]")
         return
 
     confirmacion = Confirm.ask(
-        f"¿Está seguro de que desea eliminar a [bold]{productos['nombre']} [/bold]?",
+        f"¿Está seguro de que desea eliminar a [bold]{libros['nombre']} [/bold]?",
         default=False
     )
 
     if confirmacion:
-        if libro.eliminar_producto(filepath, str(documento)):
-            console.print(Panel("✅ ¡Producto eliminado con éxito!", border_style="green", title="Éxito"))
+        if libro.eliminar_libro(filepath, str(documento)):
+            console.print(Panel("✅ ¡Libro eliminado con éxito!", border_style="green", title="Éxito"))
         else:
             console.print(Panel("❌ Ocurrió un error al eliminar.", border_style="red", title="Error"))
     else:
@@ -290,28 +299,33 @@ def elegir_almacenamiento2() -> str:
         show_choices=False
     )
     if opcion == '1':
-        return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_CSV2)
+        return os.path.join(DIRECTORIO_DATOS, ARCHIVO_LIBROS_JSON)
     else:
-        return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON2)
+        return os.path.join(DIRECTORIO_DATOS, ARCHIVO_LIBROS_CSV)
 
-#----PRÉSTAMO----
+
+# ----PRÉSTAMO----
+
 
 def menu_crear_prestamo(filepath: str):
     """Maneja la lógica para registrar un nuevo préstamo"""
     console.print(Panel.fit("[bold cyan]📝 Registrar nuevo préstamo[/bold cyan]"))
 
-    id_cliente = Prompt.ask("ID del cliente")
-    id_producto = Prompt.ask("ID del producto")
+    base_dir = os.path.dirname(filepath)
+    archivo_prestamo = os.path.join(base_dir, "prestamos.json")
+    archivo_usuario = os.path.join(base_dir, "usuario.json")
+    archivo_libro = os.path.join(base_dir, "libro.json")
+
+    id_usuario = Prompt.ask("ID del usuario")
+    id_libro = Prompt.ask("ID del libro")
 
     prestamo_creado = prestamos.realizar_prestamo(
-        os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON3),  # préstamos
-        os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON),   # clientes
-        os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON2),  # productos
-        id_cliente,
-        id_producto
+        ARCHIVO_PRESTAMOS_JSON, # Archivos de préstamos
+        ARCHIVO_USUARIOS_JSON, # Usuarios
+        ARCHIVO_LIBROS_JSON,  #Libros
+        id_usuario,
+        id_libro
     )
-
-
 
     if prestamo_creado:
         console.print(Panel.fit(
@@ -319,28 +333,105 @@ def menu_crear_prestamo(filepath: str):
             border_style="green", title="Éxito"
         ))
     else:
-        console.print(Panel.fit(
-            "⚠️  No se pudo registrar el préstamo. Verifique los datos.",
-            border_style="red", title="Error"
-        ))
+        console.print(
+            Panel.fit(
+                "⚠️  No se pudo registrar el préstamo. Verifique los datos.",
+                border_style="red",
+                title="Error",
+            )
+        )
 
 
-def menu_registrar_devolucion(filepath:str):
-    """Maneja la lógica para registrar la devolucion """
+def menu_registrar_devolucion(archivo_prestamo: str, archivo_libros: str):
+    """Maneja la lógica para registrar la devolución"""
     console.print(Panel.fit("[bold cyan]📦 Registrar devolución[/bold cyan]"))
 
-    id_prestamo=Prompt.ask("id_prestamo")
+    id_prestamo = Prompt.ask("id_prestamo")
 
-    devolucion_creado=prestamos.registrar_devolucion(filepath,id_prestamo)
+    devolucion_creado = prestamos.registrar_devolucion(archivo_prestamo, archivo_libros, id_prestamo)
 
     if devolucion_creado:
-        console.print(Panel.fit(
-             f"\n✅ ¡Devolución registrada correctamente!\n ID Asignado: [bold yellow] {devolucion_creado['id']}[/bold yellow] ",
-             border_style="green",title="Éxito" ))
+        console.print(
+            Panel.fit(
+                f"\n✅ ¡Devolución registrada correctamente!\n ID Asignado: [bold yellow]{devolucion_creado['id_prestamo']}[/bold yellow]",
+                border_style="green",
+                title="Éxito",
+            )
+        )
     else:
-        console.print(Panel.fit(
-            f"\n❌  No se encontró el préstamo o ya fue devuelto",
-            border_style="red",title="Error" ))
+        console.print(
+            Panel.fit(
+                f"\n❌ No se encontró el préstamo o ya fue devuelto",
+                border_style="red",
+                title="Error",
+            )
+        )
+
+
+def menu_listar_prestamo(filepath: str):
+    """Maneja la lógica para mostrar todos los préstamos."""
+
+    console.print(Panel.fit("[bold cyan]👥 Lista de Préstamos[/bold cyan]"))
+
+    archivo_prestamo = os.path.join("directorio", "data", "prestamos.json")
+    archivo_usuario = os.path.join("directorio", "data", "usuario.json")
+    archivo_libro = os.path.join("directorio", "data", "libro.json")
+    # Llamar a la función que obtiene los préstamos registrados
+    prestamos_registrados = prestamos.listar_prestamos(archivo_prestamo, archivo_usuario, archivo_libro)
+
+    if not prestamos_registrados:
+        console.print("[yellow]⚠️ No hay préstamos registrados.[/yellow]")
+        return
+
+    # Crear tabla
+    tabla = Table(title="📚 Lista de Préstamos", show_lines=True)
+    tabla.add_column("ID Préstamo", justify="center", style="cyan", no_wrap=True)
+    tabla.add_column("Usuario", justify="left", style="magenta")
+    tabla.add_column("Libro", justify="left", style="blue")
+    tabla.add_column("Fecha", justify="center", style="green")
+    tabla.add_column("Estado", justify="center", style="bold yellow")
+
+    # Agregar filas a la tabla
+    for p in prestamos_registrados:
+        tabla.add_row(
+            str(p['id_prestamo']),
+            p['usuario'],
+            p['libro'],
+            p['fecha'],
+            p['estado'],
+        )
+
+    console.print(tabla)
+
+def menu_listar_devoluciones_prestamos():
+    """Muestra todos los préstamos devueltos en una tabla."""
+    archivo_prestamo = ARCHIVO_PRESTAMOS_JSON
+    archivo_usuario = ARCHIVO_USUARIOS_JSON
+    archivo_libro = ARCHIVO_LIBROS_JSON
+
+    devoluciones = prestamos.listar_devoluciones(archivo_prestamo, archivo_usuario, archivo_libro)
+
+    if not devoluciones:
+        console.print("[yellow]⚠️ No hay devoluciones registradas.[/yellow]")
+        return
+
+    tabla = Table(title="📦 Lista de Devoluciones", show_lines=True)
+    tabla.add_column("ID Préstamo", justify="center", style="cyan")
+    tabla.add_column("Usuario", justify="left", style="magenta")
+    tabla.add_column("Libro", justify="left", style="blue")
+    tabla.add_column("Fecha", justify="center", style="green")
+    tabla.add_column("Estado", justify="center", style="bold yellow")
+
+    for d in devoluciones:
+        tabla.add_row(
+            str(d['id_prestamo']),
+            d['usuario'],
+            d['libro'],
+            d['fecha'],
+            d['estado'],
+        )
+
+    console.print(tabla)
 
 
 def elegir_almacenamiento3()->str:
@@ -361,41 +452,43 @@ def elegir_almacenamiento3()->str:
         show_choices=False
     )
     if opcion == '1':
-        return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_CSV3)
+        return os.path.join(DIRECTORIO_DATOS,ARCHIVO_PRESTAMOS_JSON)
     else:
-        return os.path.join(DIRECTORIO_DATOS, NOMBRE_ARCHIVO_JSON3)
+        return os.path.join(DIRECTORIO_DATOS,ARCHIVO_PRESTAMOS_CSV)
 
 
 # --- LISTAS DE OPCIONES ---
 
-def menu_clientes():
+def menu_usuarios():
     """Imprime el menú principal en la consola usando un Panel de Rich."""
     menu_c = (
-        "[bold yellow]1[/bold yellow]. Registrar un nuevo cliente\n"
-        "[bold yellow]2[/bold yellow]. Ver todos los clientes\n"
-        "[bold yellow]3[/bold yellow]. Actualizar datos de un cliente\n"
-        "[bold yellow]4[/bold yellow]. Eliminar un cliente\n"
+        "[bold yellow]1[/bold yellow]. Registrar un nuevo usuario\n"
+        "[bold yellow]2[/bold yellow]. Ver todos los usuarios\n"
+        "[bold yellow]3[/bold yellow]. Actualizar datos de un usuario\n"
+        "[bold yellow]4[/bold yellow]. Eliminar un usuario\n"
         "[bold red]5[/bold red]. Salir"
     )
-    console.print(Panel(menu_c, title="[bold]CLIENTES[/bold]", subtitle="Seleccione una opción", border_style="green"))
+    console.print(Panel(menu_c, title="[bold]USUARIOS[/bold]", subtitle="Seleccione una opción", border_style="green"))
 
-def menu_productos():
+def menu_libros():
 
     menu_p = (
-        "[bold yellow]1[/bold yellow]. Registrar un nuevo producto\n"
-        "[bold yellow]2[/bold yellow]. Ver todos los producto\n"
-        "[bold yellow]3[/bold yellow]. Actualizar datos de un producto\n"
-        "[bold yellow]4[/bold yellow]. Eliminar un producto\n"
+        "[bold yellow]1[/bold yellow]. Registrar un nuevo libro\n"
+        "[bold yellow]2[/bold yellow]. Ver todos los libro\n"
+        "[bold yellow]3[/bold yellow]. Actualizar datos de un libro\n"
+        "[bold yellow]4[/bold yellow]. Eliminar un libro\n"
         "[bold red]5[/bold red]. Salir"
     )
     console.print(
-        Panel(menu_p, title="[bold]CLIENTES[/bold]", subtitle="Seleccione una opción", border_style="green"))
+        Panel(menu_p, title="[bold]LIBROS[/bold]", subtitle="Seleccione una opción", border_style="green"))
 
 def menu_prestamos():
     menu_pre=(
         "[bold yellow]1[/bold yellow]. Registrar un nuevo préstamo\n"
         "[bold yellow]2[/bold yellow]. Resgistrar devolución\n"
-        "[bold red]3[/bold red]. Salir"
+        "[bold yellow]3[/bold yellow]. Listar los prestamos\n"
+        "[bold yellow]4[/bold yellow]. Listar devoluciones\n"
+        "[bold red]5[/bold red]. Salir"
     )
     console.print(
         Panel(menu_pre, title="[bold]PRÉSTAMOS[/bold]", subtitle="Seleccione una opción", border_style="green"))
@@ -406,7 +499,7 @@ def main():
 
     while True:
         console.print("[yellow]1.[/yellow] Gestionar Clientes")
-        console.print("[yellow]2.[/yellow] Gestionar Productos")
+        console.print("[yellow]2.[/yellow] Gestionar Libros")
         console.print("[yellow]3.[/yellow] Gestionar Préstamos")
         console.print("[yellow]4.[/yellow] Salir")
 
@@ -416,19 +509,19 @@ def main():
 
             archivo_seleccionado = elegir_almacenamiento()
             console.print(f"\n👍 Usando el archivo: [bold green]{archivo_seleccionado}[/bold green]")
-            # MENÚ DE CLIENTES
+            # MENÚ DE USUARIOS
             while True:
-                menu_clientes()
+                menu_usuarios()
                 opcion = Prompt.ask("Opción", choices=["1", "2", "3", "4", "5"], show_choices=False)
 
                 if opcion == '1':
-                    menu_crear_cliente(archivo_seleccionado)
+                    menu_crear_usuario(archivo_seleccionado)
                 elif opcion == '2':
-                    menu_leer_clientes(archivo_seleccionado)
+                    menu_leer_usuario(archivo_seleccionado)
                 elif opcion == '3':
-                    menu_actualizar_cliente(archivo_seleccionado)
+                    menu_actualizar_usuario(archivo_seleccionado)
                 elif opcion == '4':
-                    menu_eliminar_cliente(archivo_seleccionado)
+                    menu_eliminar_usuario(archivo_seleccionado)
                 elif opcion == '5':
                     console.print("\n[bold magenta]👋 Volviendo al menú principal...[/bold magenta]")
                     break
@@ -437,35 +530,46 @@ def main():
 
             archivo_seleccionado = elegir_almacenamiento2()
             console.print(f"\n👍 Usando el archivo: [bold green]{archivo_seleccionado}[/bold green]")
-            # MENÚ DE PRODUCTOS
+
+            # MENÚ DE LIBROS
             while True:
-                menu_productos()
+                menu_libros()
                 opcion = Prompt.ask("Opción", choices=["1", "2", "3", "4", "5"], show_choices=False)
 
                 if opcion == '1':
-                    menu_crear_producto(archivo_seleccionado)
-                elif opcion == '2':
-                    menu_leer_productos(archivo_seleccionado)
-                elif opcion == '3':
-                    menu_actualizar_producto(archivo_seleccionado)
+                    menu_crear_libro(archivo_seleccionado)
+                elif opcion == "2":
+                    menu_leer_libros(archivo_seleccionado)
+                elif opcion == "3":
+                    menu_actualizar_libro(archivo_seleccionado)
                 elif opcion == '4':
-                    menu_eliminar_producto(archivo_seleccionado)
+                    menu_eliminar_libro(archivo_seleccionado)
                 elif opcion == '5':
                     console.print("\n[bold magenta]👋 Volviendo al menú principal...[/bold magenta]")
                     break
+
         elif opcion_principal == '3':
+            archivo_prestamos = ARCHIVO_PRESTAMOS_JSON
+            archivo_usuarios = ARCHIVO_USUARIOS_JSON
+            archivo_libros = ARCHIVO_LIBROS_JSON
+
             archivo_seleccionado = elegir_almacenamiento3()
             console.print(f"\n👍 Usando el archivo: [bold green]{archivo_seleccionado}[/bold green]")
+
             #MENU PRÉSTAMOS
             while True:
                 menu_prestamos()
-                opcion=Prompt.ask("Opción",choices=["1","2","3"],show_choices=False)
+                opcion=Prompt.ask("Opción",choices=["1","2","3","4","5"],show_choices=False)
 
                 if opcion == '1':
                     menu_crear_prestamo(archivo_seleccionado)
                 elif opcion == '2':
-                    menu_registrar_devolucion(archivo_seleccionado)
+                    menu_registrar_devolucion(archivo_seleccionado,archivo_libros)
                 elif opcion == '3':
+                    menu_listar_prestamo(archivo_seleccionado)
+                elif opcion == '4':
+                   menu_listar_devoluciones_prestamos()
+                elif opcion == '5':
                     console.print("\n[bold magenta]👋 Volviendo al menú principal...[/bold magenta]")
                     break
         elif opcion_principal == '4':
