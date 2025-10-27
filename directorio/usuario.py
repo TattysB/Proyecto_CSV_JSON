@@ -6,7 +6,7 @@ CLIENTE
 """
 Módulo de Lógica de Negocio.
 
-Contiene todas las funciones para gestionar la agenda de aprendices (CRUD).
+Contiene todas las funciones para gestionar la agenda de usuarios (CRUD).
 Este módulo utiliza 'gestor_datos' para la persistencia.
 """
 
@@ -15,24 +15,24 @@ from typing import Any, Dict, List, Optional
 import gestor_datos
 
 
-def generar_id(clientes: List[Dict[str, Any]]) -> int:
+def generar_id(usuarios: List[Dict[str, Any]]) -> int:
     """
-    Genera un nuevo ID autoincremental para un aprendiz.
+    Genera un nuevo ID autoincremental para un usuario.
 
     Args:
-        clientes (List[Dict[str, Any]]): La lista actual de aprendices.
+        usuarios (List[Dict[str, Any]]): La lista actual de usuarios.
 
     Returns:
         int: El nuevo ID a asignar.
     """
-    if not clientes:
+    if not usuarios:
         return 1
 
-    max_id = max(int(ap.get('id', 0)) for ap in clientes)
+    max_id = max(int(ap.get('id', 0)) for ap in usuarios)
     return max_id + 1
 
 
-def crear_cliente(
+def crear_usuario(
         filepath: str,
         documento: int,
         nombres: str,
@@ -41,30 +41,30 @@ def crear_cliente(
 
 ) -> Optional[Dict[str, Any]]:
     """
-    (CREATE) Agrega un nuevo aprendiz a la agenda.
+    (CREATE) Agrega un nuevo usuario a la agenda.
 
     Valida que el número de documento no exista antes de agregarlo.
 
     Args:
         filepath (str): Ruta al archivo de datos.
-        documento (int): Número de documento del aprendiz.
-        nombres (str): Nombres del aprendiz.
-        apellidos (str): Apellidos del aprendiz.
+        documento (int): Número de documento del usuario.
+        nombres (str): Nombres del usuario.
+        apellidos (str): Apellidos del usuario.
         email (str): Dirección de residencia.
 
     Returns:
-        Optional[Dict[str, Any]]: El diccionario del aprendiz creado o None si ya existía.
+        Optional[Dict[str, Any]]: El diccionario del usuario creado o None si ya existía.
     """
-    clientes = gestor_datos.cargar_datos(filepath)
+    usuarios = gestor_datos.cargar_datos(filepath)
     str_documento = str(documento)
 
-    if any(ap.get('documento') == str_documento for ap in clientes):
+    if any(ap.get('documento') == str_documento for ap in usuarios):
         print(f"\n❌ Error: El documento '{str_documento}' ya se encuentra registrado.")
         return None
 
-    nuevo_id = generar_id(clientes)
+    nuevo_id = generar_id(usuarios)
 
-    nuevo_cliente = {
+    nuevo_usuario = {
         'id': str(nuevo_id),
         'documento': str_documento,
         'nombres': nombres,
@@ -73,103 +73,103 @@ def crear_cliente(
 
     }
 
-    clientes.append(nuevo_cliente)
-    gestor_datos.guardar_datos(filepath, clientes)
-    return nuevo_cliente
+    usuarios.append(nuevo_usuario)
+    gestor_datos.guardar_datos(filepath, usuarios)
+    return nuevo_usuario
 
 
-def leer_todos_los_clientes(filepath: str) -> List[Dict[str, Any]]:
+def leer_todos_los_usuario(filepath: str) -> List[Dict[str, Any]]:
     """
-    (READ) Obtiene la lista completa de aprendices.
+    (READ) Obtiene la lista completa de usuarios.
 
     Args:
         filepath (str): Ruta al archivo de datos.
 
     Returns:
-        List[Dict[str, Any]]: La lista de aprendices.
+        List[Dict[str, Any]]: La lista de usuarios.
     """
     return gestor_datos.cargar_datos(filepath)
 
 
-def buscar_cliente_por_documento(filepath: str, documento: str) -> Optional[Dict[str, Any]]:
+def buscar_usuario_por_documento(filepath: str, documento: str) -> Optional[Dict[str, Any]]:
     """
-    Busca un cliente específico por su número de documento.
+    Busca un usuario específico por su número de documento.
 
     Args:
         filepath (str): Ruta al archivo de datos.
         documento (str): El documento a buscar.
 
     Returns:
-        Optional[Dict[str, Any]]: El diccionario del cliente si se encuentra, de lo contrario None.
+        Optional[Dict[str, Any]]: El diccionario del usaurio si se encuentra, de lo contrario None.
     """
-    clientes = gestor_datos.cargar_datos(filepath)
-    for cliente in clientes:
-        if cliente.get('documento') == documento:
-            return cliente
+    usuarios = gestor_datos.cargar_datos(filepath)
+    for usaurio in usuarios:
+        if usaurio.get('documento') == documento:
+            return usaurio
     return None
 
 
-def actualizar_cliente(
+def actualizar_usuario(
         filepath: str,
         documento: str,
         datos_nuevos: Dict[str, Any]
 ) -> Optional[Dict[str, Any]]:
     """
-    (UPDATE) Modifica los datos de un cliente existente.
+    (UPDATE) Modifica los datos de un usuario existente.
 
     Args:
         filepath (str): Ruta al archivo de datos.
-        documento (str): El documento del cliente a actualizar.
+        documento (str): El documento del usuario a actualizar.
         datos_nuevos (Dict[str, Any]): Un diccionario con los campos a actualizar.
 
     Returns:
-        Optional[Dict[str, Any]]: El diccionario del cliente actualizado, o None si no se encontró.
+        Optional[Dict[str, Any]]: El diccionario del usuario actualizado, o None si no se encontró.
     """
-    clientes = gestor_datos.cargar_datos(filepath)
-    cliente_encontrado = None
+    usuarios = gestor_datos.cargar_datos(filepath)
+    usuario_encontrado = None
     indice = -1
 
-    for i, cliente in enumerate(clientes):
-        if cliente.get('documento') == documento:
-            cliente_encontrado = cliente
+    for i, usuario in enumerate(usuarios):
+        if usuario.get('documento') == documento:
+            usuario_encontrado = usuario
             indice = i
             break
 
-    if cliente_encontrado:
+    if usuario_encontrado:
         # Convertimos todos los nuevos valores a string para consistencia
         for key, value in datos_nuevos.items():
             datos_nuevos[key] = str(value)
 
-        cliente_encontrado.update(datos_nuevos)
-        clientes[indice] = cliente_encontrado
-        gestor_datos.guardar_datos(filepath, clientes)
-        return cliente_encontrado
+        usuario_encontrado.update(datos_nuevos)
+        usuarios[indice] = usuario_encontrado
+        gestor_datos.guardar_datos(filepath, usuarios)
+        return usuario_encontrado
 
     return None
 
 
-def eliminar_cliente(filepath: str, documento: str) -> bool:
+def eliminar_usuario(filepath: str, documento: str) -> bool:
     """
-    (DELETE) Elimina un cliente de la agenda.
+    (DELETE) Elimina un usuario de la agenda.
 
     Args:
         filepath (str): Ruta al archivo de datos.
-        documento (str): El documento del cliente a eliminar.
+        documento (str): El documento del usuario a eliminar.
 
     Returns:
-        bool: True si el cliente fue eliminado, False si no se encontró.
+        bool: True si el usuario fue eliminado, False si no se encontró.
     """
-    clientes = gestor_datos.cargar_datos(filepath)
-    cliente_a_eliminar = None
+    usuarios = gestor_datos.cargar_datos(filepath)
+    usuario_a_eliminar = None
 
-    for cliente in clientes:
-        if cliente.get('documento') == documento:
-            cliente_a_eliminar = cliente
+    for usuario in usuarios:
+        if usuario.get('documento') == documento:
+            usuario_a_eliminar = usuario
             break
 
-    if cliente_a_eliminar:
-        clientes.remove(cliente_a_eliminar)
-        gestor_datos.guardar_datos(filepath, clientes)
+    if usuario_a_eliminar:
+        usuarios.remove(usuario_a_eliminar)
+        gestor_datos.guardar_datos(filepath, usuarios)
         return True
 
     return False
