@@ -26,7 +26,7 @@ from rich import box
 console = Console()
 
 
-# Ruta base (donde está este archivo main2.py)
+# Ruta base (donde está este archivo main.py)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Carpeta de datos dentro del directorio
