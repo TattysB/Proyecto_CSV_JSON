@@ -312,7 +312,7 @@ def menu_crear_prestamo(filepath: str):
     console.print(Panel.fit("[bold cyan]📝 Registrar nuevo préstamo[/bold cyan]"))
 
     base_dir = os.path.dirname(filepath)
-    archivo_prestamo = os.path.join(base_dir, "prestamos.json")
+    archivo_prestamo = os.path.join(base_dir, "prestamo.json")
     archivo_usuario = os.path.join(base_dir, "usuario.json")
     archivo_libro = os.path.join(base_dir, "libro.json")
 
@@ -373,7 +373,7 @@ def menu_listar_prestamo(filepath: str):
 
     console.print(Panel.fit("[bold cyan]👥 Lista de Préstamos[/bold cyan]"))
 
-    archivo_prestamo = os.path.join("directorio", "data", "prestamos.json")
+    archivo_prestamo = os.path.join("directorio", "data", "prestamo.json")
     archivo_usuario = os.path.join("directorio", "data", "usuario.json")
     archivo_libro = os.path.join("directorio", "data", "libro.json")
     # Llamar a la función que obtiene los préstamos registrados
