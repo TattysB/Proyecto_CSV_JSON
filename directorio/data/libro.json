@@ -2,8 +2,8 @@
     {
         "id": "1",
         "ISBN": "123",
-        "nombre": "lola",
-        "autor": "gabriel",
-        "stock": "2"
+        "nombre": "Sopa de  letras",
+        "autor": "Rafael Pombo",
+        "stock": "1"
     }
 ]
