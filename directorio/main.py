@@ -8,8 +8,8 @@ Maneja la interacción con el usuario (menús, entradas, salidas) usando la libr
 
 import os
 
-import usuario
-import libro
+from . import usuario
+from . import libro
 # import prestamos
 
 # --- Importaciones de la librería Rich ---
@@ -376,4 +376,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         console.print("\n\n[bold red]Programa interrumpido por el usuario. Adiós.[/bold red]")
-
