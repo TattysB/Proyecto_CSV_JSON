@@ -1,4 +1,3 @@
 id_prestamo,id_usuario,id_libro,fecha,estado
-1,1193,123,2025-10-24,devuelto
-2,1193,123,2025-10-24,prestado
-3,1193,123,2025-10-27,prestado
+1,1234,123,2025-10-29,prestado
+2,1234,123,2025-10-29,prestado

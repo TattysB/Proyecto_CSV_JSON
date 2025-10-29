@@ -19,12 +19,7 @@ console = Console()
 
 
 
-# Obtener la ruta absoluta de la carpeta raíz del proyecto
 
-
-# ---------------------------------------------------------------------
-# 🔍 FUNCIÓN: Buscar registro en JSON y CSV
-# ---------------------------------------------------------------------
 def buscar_en_json_y_csv(archivo: str, clave: str, valor: str):
     """
     Busca un registro por clave y valor tanto en JSON como en CSV.
@@ -71,9 +66,7 @@ def buscar_en_json_y_csv(archivo: str, clave: str, valor: str):
     return None
 
 
-# ---------------------------------------------------------------------
-# 📚 FUNCIÓN: Registrar préstamo
-# ---------------------------------------------------------------------
+
 def realizar_prestamo(archivo_prestamo: str, archivo_usuario: str, archivo_libro: str,
                       nuevo_id_usuario: str, nuevo_id_libro: str):
     """
@@ -96,6 +89,24 @@ def realizar_prestamo(archivo_prestamo: str, archivo_usuario: str, archivo_libro
     if not libro_encontrado:
         console.print("[bold red]❌ El libro no existe en JSON ni CSV[/bold red]")
         return None
+    try:
+        stock_actual = int(libro_encontrado.get("stock", "0"))
+    except ValueError:
+        stock_actual = 0
+
+    if stock_actual <= 0:
+        console.print(
+            f"[bold red]❌ No hay stock disponible para el libro con ISBN {nuevo_id_libro}[/bold red]"
+        )
+        return None
+
+    # Si hay stock, restar 1
+    libros = gestor_datos2.cargar_datos(archivo_libro)
+    for lb in libros:
+        if str(lb.get("ISBN")) == str(nuevo_id_libro):
+            lb["stock"] = str(stock_actual - 1)
+            break
+    gestor_datos2.guardar_datos(archivo_libro, libros)
 
     # Crear el préstamo
     nuevo_prestamo = {
@@ -121,9 +132,6 @@ def realizar_prestamo(archivo_prestamo: str, archivo_usuario: str, archivo_libro
     return nuevo_prestamo
 
 
-# ---------------------------------------------------------------------
-# 🔄 FUNCIÓN: Registrar devolución
-# ---------------------------------------------------------------------
 def registrar_devolucion(archivo_prestamo: str, archivo_libros: str, id_prestamo: str):
     """
     Registra la devolución de un producto prestado, cambiando su estado y aumentando el stock.
@@ -162,9 +170,8 @@ def registrar_devolucion(archivo_prestamo: str, archivo_libros: str, id_prestamo
     else:
         console.print("[bold red]❌ No se encontró el libro asociado[/bold red]")
         return None
-# ---------------------------------------------------------------------
-# 📋 FUNCIÓN: Listar todos los préstamos
-# ---------------------------------------------------------------------
+
+
 def listar_prestamos(archivo_prestamo: str, archivo_usuario: str, archivo_libro: str):
     """
     Retorna una lista con los préstamos registrados, mostrando
@@ -189,8 +196,8 @@ def listar_prestamos(archivo_prestamo: str, archivo_usuario: str, archivo_libro:
         # Armar el registro combinado
         registro = {
             "id_prestamo": prestamo.get("id_prestamo"),
-            "usuario": usuario.get("nombre") if usuario else "Desconocido",
-            "libro": libro.get("titulo") if libro else "Desconocido",
+            "usuario": usuario.get("nombres")if usuario else "No encontrado",
+            "libro": libro.get("nombre") if libro else "No encontrado",
             "fecha": prestamo.get("fecha"),
             "estado": prestamo.get("estado")
         }
@@ -205,9 +212,33 @@ def listar_devoluciones(archivo_prestamo: str, archivo_usuario: str, archivo_lib
     mostrando datos combinados de usuario y libro.
     """
     # Cargar todos los préstamos
-    prestamos = listar_prestamos(archivo_prestamo, archivo_usuario, archivo_libro)
+    prestamos = gestor_datos3.cargar_datos(archivo_prestamo)
+    usuarios = gestor_datos.cargar_datos(archivo_usuario)
+    libros = gestor_datos2.cargar_datos(archivo_libro)
 
-    # Filtrar solo los que están devueltos
-    devoluciones = [p for p in prestamos if p['estado'] == 'devuelto']
+    if not prestamos:
+        return []
+
+    devoluciones = []
+
+    for prestamo in prestamos:
+        if prestamo.get("estado") == "devuelto":
+            usuario = next(
+                (u for u in usuarios if str(u.get("documento")) == str(prestamo.get("id_usuario"))),
+                None
+            )
+            libro = next(
+                (l for l in libros if str(l.get("ISBN")) == str(prestamo.get("id_libro"))),
+                None
+            )
+
+            devolucion = {
+                "id_prestamo": prestamo.get("id_prestamo"),
+                "usuario": usuario.get("nombres") if usuario else "No encontrado",
+                "libro": libro.get("nombre") if libro else "No encontrado",
+                "fecha": prestamo.get("fecha"),
+                "estado": prestamo.get("estado")
+            }
+            devoluciones.append(devolucion)
 
     return devoluciones
