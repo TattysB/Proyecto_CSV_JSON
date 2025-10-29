@@ -6,7 +6,7 @@ Se encarga de registrar los préstamos de productos (libros) a clientes.
 Guarda los datos en un archivo JSON y CSV.
 """
 
-from datetime import date
+from datetime import date,timedelta
 import gestor_datos3  # préstamos
 import gestor_datos2 # libros
 import gestor_datos   # usuarios
@@ -89,6 +89,8 @@ def realizar_prestamo(archivo_prestamo: str, archivo_usuario: str, archivo_libro
     if not libro_encontrado:
         console.print("[bold red]❌ El libro no existe en JSON ni CSV[/bold red]")
         return None
+
+    fecha_esperada=date.today()+timedelta(days=1)
     try:
         stock_actual = int(libro_encontrado.get("stock", "0"))
     except ValueError:
@@ -113,17 +115,23 @@ def realizar_prestamo(archivo_prestamo: str, archivo_usuario: str, archivo_libro
         "id_prestamo": len(prestamos) + 1,
         "id_usuario": nuevo_id_usuario,
         "id_libro": nuevo_id_libro,
-        "fecha": str(date.today()),
-        "estado": "prestado"
+        "fecha_prestamo": str(date.today()),
+        "fecha_devolucion_esperada": str(fecha_esperada),
+        "estado": "prestado",
     }
 
     prestamos.append(nuevo_prestamo)
+
+    for p in prestamos:
+        if "fecha" in p:
+            p["fecha_prestamo"] = p.pop("fecha")
+
     gestor_datos3.guardar_datos(archivo_prestamo, prestamos)
 
     # Guardar también en CSV
     archivo_csv = archivo_prestamo.replace(".json", ".csv")
     with open(archivo_csv, "w", newline="", encoding="utf-8") as f:
-        campos = ["id_prestamo", "id_usuario", "id_libro", "fecha", "estado"]
+        campos = ["id_prestamo", "id_usuario", "id_libro", "fecha_prestamo",'fecha_devolucion_esperada', "estado"]
         writer = csv.DictWriter(f, fieldnames=campos)
         writer.writeheader()
         writer.writerows(prestamos)
@@ -186,19 +194,39 @@ def listar_prestamos(archivo_prestamo: str, archivo_usuario: str, archivo_libro:
     if not prestamos:
         return []  # No hay préstamos
 
-    lista_resultado = []
+    for prestamo in prestamos:
+        fecha_esperada=prestamo.get("fecha_devolucion_esperada")
+        if prestamo.get("estado") == "prestado" and fecha_esperada:
+            try:
+                fecha_esperada = date.fromisoformat(fecha_esperada)
+                if date.today() > fecha_esperada:
+                    prestamo["estado"] = "atrasado"
+            except Exception as e:
+                console.print(e)
+                pass
 
+    gestor_datos3.guardar_datos(archivo_prestamo,prestamos)
+
+    lista_resultado = []
     for prestamo in prestamos:
         # Buscar usuario y libro asociados
         usuario = next((u for u in usuarios if str(u.get("documento")) == str(prestamo.get("id_usuario"))), None)
-        libro = next((l for l in libros if str(l.get("ISBN")) == str(prestamo.get("id_libro"))), None)
+        libro = next((l for l in libros if str(l.get("ISBN")) == str(prestamo.get("id_libro"))),None,)
+
+        nombre_usuario = (
+            f"{usuario.get('nombres')} {usuario.get('apellidos')}"
+            if usuario else "Desconocido")
+
+        nombre_libro = libro.get("nombre") if libro else "Desconocido"
+
 
         # Armar el registro combinado
         registro = {
             "id_prestamo": prestamo.get("id_prestamo"),
-            "usuario": usuario.get("nombres")if usuario else "No encontrado",
-            "libro": libro.get("nombre") if libro else "No encontrado",
-            "fecha": prestamo.get("fecha"),
+            "usuario": nombre_usuario,
+            "libro": nombre_libro,
+            "fecha_prestamo": prestamo.get("fecha_prestamo"),
+            "fecha_devolucion_esperada":prestamo.get("fecha_devolucion_esperada"),
             "estado": prestamo.get("estado")
         }
 
@@ -223,20 +251,21 @@ def listar_devoluciones(archivo_prestamo: str, archivo_usuario: str, archivo_lib
 
     for prestamo in prestamos:
         if prestamo.get("estado") == "devuelto":
-            usuario = next(
-                (u for u in usuarios if str(u.get("documento")) == str(prestamo.get("id_usuario"))),
-                None
-            )
-            libro = next(
-                (l for l in libros if str(l.get("ISBN")) == str(prestamo.get("id_libro"))),
-                None
-            )
+            usuario = next((u for u in usuarios if str(u.get("documento")) == str(prestamo.get("id_usuario"))),None)
+            libro = next((l for l in libros if str(l.get("ISBN")) == str(prestamo.get("id_libro"))),None)
+
+            nombre_usuario = (
+                f"{usuario.get('nombres')} {usuario.get('apellidos')}"
+                if usuario else "Desconocido")
+
+            nombre_libro = libro.get("nombre") if libro else "Desconocido"
+
 
             devolucion = {
                 "id_prestamo": prestamo.get("id_prestamo"),
-                "usuario": usuario.get("nombres") if usuario else "No encontrado",
-                "libro": libro.get("nombre") if libro else "No encontrado",
-                "fecha": prestamo.get("fecha"),
+                "usuario": nombre_usuario,
+                "libro": nombre_libro,
+                "fecha_prestamo": prestamo.get("fecha_prestamo"),
                 "estado": prestamo.get("estado")
             }
             devoluciones.append(devolucion)
