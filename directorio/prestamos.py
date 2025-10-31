@@ -210,8 +210,7 @@ def listar_prestamos(archivo_prestamo: str, archivo_usuario: str, archivo_libro:
     for prestamo in prestamos:
         # Buscar usuario y libro asociados
         usuario = next((u for u in usuarios if str(u.get("documento")) == str(prestamo.get("id_usuario"))), None)
-        libro = next((l for l in libros if str(l.get("ISBN")) == str(prestamo.get("id_libro"))),None,)
-
+        libro = next((lib for lib  in libros if str(lib.get("ISBN")) == str(prestamo.get("id_libro"))),None,)
         nombre_usuario = (
             f"{usuario.get('nombres')} {usuario.get('apellidos')}"
             if usuario else "Desconocido")
@@ -251,8 +250,7 @@ def listar_devoluciones(archivo_prestamo: str, archivo_usuario: str, archivo_lib
     for prestamo in prestamos:
         if prestamo.get("estado") == "devuelto":
             usuario = next((u for u in usuarios if str(u.get("documento")) == str(prestamo.get("id_usuario"))),None)
-            libro = next((l for l in libros if str(l.get("ISBN")) == str(prestamo.get("id_libro"))),None)
-
+            libro = next((lib for lib in libros if str(lib.get("ISBN")) == str(prestamo.get("id_libro"))),None)
             nombre_usuario = (
                 f"{usuario.get('nombres')} {usuario.get('apellidos')}"
                 if usuario else "Desconocido")

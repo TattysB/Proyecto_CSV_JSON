@@ -1,19 +1,12 @@
-"""
-CLIENTE
-"""
-
 # -*- coding: utf-8 -*-
 """
 Módulo de Lógica de Negocio.
-
 Contiene todas las funciones para gestionar la agenda de usuarios (CRUD).
 Este módulo utiliza 'gestor_datos' para la persistencia.
 """
 
 from typing import Any, Dict, List, Optional
-
 import gestor_datos
-
 
 def generar_id(usuarios: List[Dict[str, Any]]) -> int:
     """

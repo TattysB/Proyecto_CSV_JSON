@@ -1,2 +1,0 @@
-id_prestamo,id_usuario,id_libro,fecha_prestamo,fecha_devolucion_esperada,estado
-1,1,1,2025-10-31,2025-11-01,prestado
