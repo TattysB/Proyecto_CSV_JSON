@@ -385,10 +385,10 @@ def menu_listar_prestamo(filepath: str):
         console.print("[yellow]⚠️ No hay préstamos registrados.[/yellow]")
         return
     tabla = Table(
-        title="📝 Lista de Préstamos Registrados",
+        title="[magenta]📝  Lista de Préstamos Registrados[/magenta]",
         show_lines=True,
         box=box.DOUBLE_EDGE,
-        header_style="bold white on dark_blue",
+        header_style="bold white on black",
     )
     tabla.add_column("ID Préstamo", justify="center", style="cyan", no_wrap=True)
     tabla.add_column("Usuario", justify="left", style="magenta")
