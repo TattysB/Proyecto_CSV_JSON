@@ -89,7 +89,7 @@ def realizar_prestamo(archivo_prestamo: str, archivo_usuario: str, archivo_libro
         console.print("[bold red]❌ El libro no existe en JSON ni CSV[/bold red]")
         return None
 
-    fecha_esperada=date.today()+timedelta(days=1)
+    fecha_esperada=date.today()+timedelta(days=-1)
     try:
         stock_actual = int(libro_encontrado.get("stock", "0"))
     except ValueError:
