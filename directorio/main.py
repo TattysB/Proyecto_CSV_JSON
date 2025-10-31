@@ -109,13 +109,16 @@ def menu_actualizar_usuario(filepath: str):
     datos_nuevos = {}
 
     nombres = Prompt.ask(f"Nombres ({usuario_actual['nombres']})", default=usuario_actual['nombres'])
-    if nombres != usuario_actual['nombres']: datos_nuevos['nombres'] = nombres
+    if nombres != usuario_actual['nombres']:
+        datos_nuevos['nombres'] = nombres
 
     apellidos = Prompt.ask(f"Apellidos ({usuario_actual['apellidos']})", default=usuario_actual['apellidos'])
-    if apellidos != usuario_actual['apellidos']: datos_nuevos['apellidos'] = apellidos
+    if apellidos != usuario_actual['apellidos']:
+        datos_nuevos['apellidos'] = apellidos
 
     email = Prompt.ask(f"Email ({usuario_actual['email']})", default=(usuario_actual['email']))
-    if email != (usuario_actual['email']): datos_nuevos['email'] = email
+    if email != (usuario_actual['email']):
+        datos_nuevos['email'] = email
 
     if not datos_nuevos:
         console.print("\n[yellow]No se modificó ningún dato.[/yellow]")
@@ -241,13 +244,16 @@ def menu_actualizar_libro(filepath: str):
     datos_nuevos = {}
 
     nombre = Prompt.ask(f"Nombre ({libro_actual['nombre']})", default=libro_actual['nombre'])
-    if nombre != libro_actual['nombre']: datos_nuevos['nombre'] = nombre
+    if nombre != libro_actual['nombre']:
+        datos_nuevos['nombre'] = nombre
 
     autor = Prompt.ask(f"Autor ({libro_actual['autor']})", default=libro_actual['autor'])
-    if autor != libro_actual['autor']: datos_nuevos['autor'] = autor
+    if autor != libro_actual['autor']:
+        datos_nuevos['autor'] = autor
 
     stock = IntPrompt.ask(f"Stock ({libro_actual['stock']})", default=(libro_actual['stock']))
-    if stock != (libro_actual['stock']): datos_nuevos['stock'] = stock
+    if stock != (libro_actual['stock']):
+        datos_nuevos['stock'] = stock
 
     if not datos_nuevos:
         console.print("\n[yellow]No se modificó ningún dato.[/yellow]")
@@ -311,11 +317,6 @@ def elegir_almacenamiento2() -> str:
 def menu_crear_prestamo(filepath: str):
     """Maneja la lógica para registrar un nuevo préstamo"""
     console.print(Panel.fit("[bold cyan]📝 Registrar nuevo préstamo[/bold cyan]"))
-
-    base_dir = os.path.dirname(filepath)
-    archivo_prestamo = os.path.join(BASE_DIR, "prestamo.json")
-    archivo_usuario = os.path.join(BASE_DIR, "usuario.json")
-    archivo_libro = os.path.join(BASE_DIR, "libro.json")
 
     id_usuario = Prompt.ask("ID del usuario")
     id_libro = Prompt.ask("ID del libro")
@@ -620,8 +621,6 @@ def main():
                     break
 
         elif opcion_principal == '3':
-            archivo_prestamos = ARCHIVO_PRESTAMOS_JSON
-            archivo_usuarios = ARCHIVO_USUARIOS_JSON
             archivo_libros = ARCHIVO_LIBROS_JSON
 
             archivo_seleccionado = elegir_almacenamiento3()
