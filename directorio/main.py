@@ -313,9 +313,9 @@ def menu_crear_prestamo(filepath: str):
     console.print(Panel.fit("[bold cyan]📝 Registrar nuevo préstamo[/bold cyan]"))
 
     base_dir = os.path.dirname(filepath)
-    archivo_prestamo = os.path.join(base_dir, "prestamo.json")
-    archivo_usuario = os.path.join(base_dir, "usuario.json")
-    archivo_libro = os.path.join(base_dir, "libro.json")
+    archivo_prestamo = os.path.join(BASE_DIR, "prestamo.json")
+    archivo_usuario = os.path.join(BASE_DIR, "usuario.json")
+    archivo_libro = os.path.join(BASE_DIR, "libro.json")
 
     id_usuario = Prompt.ask("ID del usuario")
     id_libro = Prompt.ask("ID del libro")
