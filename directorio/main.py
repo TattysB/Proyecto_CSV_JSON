@@ -497,11 +497,11 @@ def elegir_almacenamiento3()->str:
 def menu_usuarios():
     """Imprime el menú principal en la consola usando un Panel de Rich."""
     menu_c = (
-        "[bold yellow]1.[/bold yellow]✍️👤  Registrar un nuevo usuario\n"
-        "[bold yellow]2.[/bold yellow]👁️👥  Ver todos los usuarios\n"
-        "[bold yellow]3.[/bold yellow]🔄👤  Actualizar datos de un usuario\n"
-        "[bold yellow]4.[/bold yellow]🗑️👤  Eliminar un usuario\n"
-        "[bold red]5.[/bold red]🚪  Volver al menú principal\n"
+        "[bold yellow]1.[/bold yellow]✍️👤  Registrar un nuevo usuario \n"
+        "[bold yellow]2.[/bold yellow]👁️👥  Ver todos los usuarios \n"
+        "[bold yellow]3.[/bold yellow]🔄👤  Actualizar datos de un usuario \n"
+        "[bold yellow]4.[/bold yellow]🗑️👤  Eliminar un usuario \n"
+        "[bold red]5.[/bold red]🚪  Volver al menú principal"
     )
     console.print(
         Panel(
@@ -519,7 +519,7 @@ def menu_libros():
         "[bold yellow]2.[/bold yellow]📖🔍  Ver todos los libro\n"
         "[bold yellow]3.[/bold yellow]🔄📘  Actualizar datos de un libro\n"
         "[bold yellow]4.[/bold yellow]🗑️📚  Eliminar un libro\n"
-        "[bold red]5.[/bold red]🚪  Volver al menú principal\n"
+        "[bold red]5.[/bold red]🚪  Volver al menú principal"
     )
     console.print(
         Panel(
