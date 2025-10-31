@@ -11,7 +11,6 @@ import gestor_datos3  # préstamos
 import gestor_datos2 # libros
 import gestor_datos   # usuarios
 import csv
-import json
 import os
 from rich.console import Console
 
