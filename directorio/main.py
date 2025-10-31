@@ -5,7 +5,6 @@ Módulo Principal - Interfaz de Usuario (UI).
 Punto de entrada de la aplicación.
 Maneja la interacción con el usuario (menús, entradas, salidas) usando la librería rich.
 """
-import email
 import os
 
 import usuario  # Importamos nuestro módulo de lógica de negocio
@@ -15,7 +14,7 @@ import prestamos
 # --- Importaciones de la librería Rich ---
 from rich.console import Console
 from rich.panel import Panel
-from rich.prompt import Confirm, IntPrompt, Prompt, FloatPrompt
+from rich.prompt import Confirm, IntPrompt, Prompt
 from rich.table import Table
 from rich.text import Text
 from rich import box
@@ -363,7 +362,7 @@ def menu_registrar_devolucion(archivo_prestamo: str, archivo_libros: str):
     else:
         console.print(
             Panel.fit(
-                f"\n❌ No se encontró el préstamo o ya fue devuelto",
+                "\n❌ No se encontró el préstamo o ya fue devuelto",
                 border_style="red",
                 title="Error",
             )
@@ -502,7 +501,7 @@ def menu_usuarios():
         "[bold yellow]2.[/bold yellow]👁️👥  Ver todos los usuarios\n"
         "[bold yellow]3.[/bold yellow]🔄👤  Actualizar datos de un usuario\n"
         "[bold yellow]4.[/bold yellow]🗑️👤  Eliminar un usuario\n"
-        "[bold red]5.[/bold red]🚪  Volver al menú principal"
+        "[bold red]5.[/bold red]🚪  Volver al menú principal\n"
     )
     console.print(
         Panel(
@@ -520,7 +519,7 @@ def menu_libros():
         "[bold yellow]2.[/bold yellow]📖🔍  Ver todos los libro\n"
         "[bold yellow]3.[/bold yellow]🔄📘  Actualizar datos de un libro\n"
         "[bold yellow]4.[/bold yellow]🗑️📚  Eliminar un libro\n"
-        "[bold red]5.[/bold red]🚪  Volver al menú principal"
+        "[bold red]5.[/bold red]🚪  Volver al menú principal\n"
     )
     console.print(
         Panel(
@@ -538,7 +537,7 @@ def menu_prestamos():
         "[bold yellow]2.[/bold yellow]📦  Resgistrar devolución\n"
         "[bold yellow]3.[/bold yellow]📋  Listar los prestamos\n"
         "[bold yellow]4.[/bold yellow]🔙  Listar devoluciones\n"
-        "[bold red]5.[/bold red]🚪  Volver al menú principal"
+        "[bold red]5.[/bold red]🚪  Volver al menú principal\n"
     )
     console.print(
         Panel(
