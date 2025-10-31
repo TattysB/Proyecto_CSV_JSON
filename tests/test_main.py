@@ -5,15 +5,15 @@ from unittest import mock
 from rich.panel import Panel
 from rich.table import Table
 
-# --- Ajuste del sys.path más robusto ---
+
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-# Ahora importamos 'main' como un módulo estándar.
+# se importa 'main' como un módulo estándar.
 import main
 
-# Importamos Rich aquí para poder parchear sus componentes directamente
+# se importa Rich aquí para poder parchear sus componentes directamente
 from rich.console import Console
 from rich.prompt import Prompt, IntPrompt, Confirm
 
@@ -23,9 +23,9 @@ class BaseTestWithMocks:
 
     def setup_method(self):
         """Prepara los mocks antes de cada prueba."""
-        # Parcheamos los componentes de Rich directamente desde sus módulos originales
+        # se archea los componentes de Rich directamente desde sus módulos originales
         # y los atributos 'usuario' y 'libro' del módulo 'main'.
-        # Usamos mock.DEFAULT para obtener el mock objeto.
+        # se usa mock.DEFAULT para obtener el mock objeto.
         self.patcher_rich_components = mock.patch.multiple(
             'rich.prompt', # Módulo donde están Prompt, IntPrompt, Confirm
             Prompt=mock.DEFAULT,
@@ -37,9 +37,9 @@ class BaseTestWithMocks:
             usuario=mock.DEFAULT,
             libro=mock.DEFAULT,
         )
-        self.patcher_console = mock.patch('main.console', spec=Console) # Parcheamos la instancia de console en main
+        self.patcher_console = mock.patch('main.console', spec=Console) # se parcha la instancia de console en main
 
-        # Iniciamos todos los parcheos
+        # se inicializan todos los parcheos
         self.mocks = {}
         self.mocks.update(self.patcher_rich_components.start())
         self.mocks.update(self.patcher_main_modules.start())
@@ -48,7 +48,7 @@ class BaseTestWithMocks:
         # Aseguramos que el método .print de la consola mockeada también sea un mock.Mock
         self.mocks['console'].print = mock.Mock()
 
-        # Parcheamos os.path.join globalmente
+        # se parcha os.path.join para devolver rutas consistentes en las pruebas
         self._os_path_join_patcher = mock.patch(
             'os.path.join', side_effect=self._mock_os_path_join_side_effect
         )
