@@ -21,51 +21,6 @@ from rich.prompt import Prompt, IntPrompt, Confirm
 from rich.table import Table
 
 
-# --- NOTA IMPORTANTE PARA TU 'main.py' (Reiteración) ---
-# Es crucial que las funciones elegir_almacenamiento y elegir_almacenamiento2
-# devuelvan las rutas CORRECTAS según la elección. En tu main.py, la lógica
-# actual está invertida (elige '1' para CSV pero retorna JSON y viceversa).
-# Por favor, corrige TU archivo main.py para que se vea así:
-
-# def elegir_almacenamiento() -> str:
-#     console.print(Panel.fit("[bold cyan]⚙️ Configuración de Almacenamiento[/bold cyan]"))
-#     prompt_texto = (
-#         "¿Dónde desea almacenar los datos?\n"
-#         "[bold yellow]1[/bold yellow]. CSV (Archivo de texto plano)\n"
-#         "[bold yellow]2[/bold yellow]. JSON (Formato más estructurado)"
-#     )
-#     console.print(prompt_texto)
-#     opcion = Prompt.ask(
-#         "Opción",
-#         choices=["1", "2"],
-#         default="2",
-#         show_choices=False
-#     )
-#     if opcion == '1': # Si elige '1', quiere CSV
-#         return os.path.join(main.DIRECTORIO_DATOS, main.ARCHIVO_USUARIOS_CSV) # Retorna CSV
-#     else: # Si elige '2' (o por defecto), quiere JSON
-#         return os.path.join(main.DIRECTORIO_DATOS, main.ARCHIVO_USUARIOS_JSON) # Retorna JSON
-
-# def elegir_almacenamiento2() -> str:
-#     console.print(Panel.fit("[bold cyan]⚙️ Configuración de Almacenamiento[/bold cyan]"))
-#     prompt_texto = (
-#         "¿Dónde desea almacenar los datos?\n"
-#         "[bold yellow]1[/bold yellow]. CSV (Archivo de texto plano)\n"
-#         "[bold yellow]2[/bold yellow]. JSON (Formato más estructurado)"
-#     )
-#     console.print(prompt_texto)
-#     opcion = Prompt.ask(
-#         "Opción",
-#         choices=["1", "2"],
-#         default="2",
-#         show_choices=False
-#     )
-#     if opcion == '1': # Si elige '1', quiere CSV
-#         return os.path.join(main.DIRECTORIO_DATOS, main.ARCHIVO_LIBROS_CSV) # Retorna CSV
-#     else: # Si elige '2' (o por defecto), quiere JSON
-#         return os.path.join(main.DIRECTORIO_DATOS, main.ARCHIVO_LIBROS_JSON) # Retorna JSON
-# --------------------------------------------------------------------------------
-
 
 class BaseTestWithMocks:
     """Clase base para pruebas que necesitan mocks comunes."""
