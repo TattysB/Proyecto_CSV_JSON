@@ -1,7 +1,3 @@
-"""
-PRODUCTO
-"""
-
 # -*- coding: utf-8 -*-
 
 from typing import Any, Dict, List, Optional
