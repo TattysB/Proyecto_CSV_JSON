@@ -1,0 +1,9 @@
+[
+    {
+        "id": "1",
+        "ISBN": "12",
+        "nombre": "lala",
+        "autor": "rafaek",
+        "stock": "2"
+    }
+]

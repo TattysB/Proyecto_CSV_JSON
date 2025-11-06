@@ -318,10 +318,10 @@ def menu_crear_prestamo(filepath: str):
     """Maneja la lógica para registrar un nuevo préstamo"""
     console.print(Panel.fit("[bold cyan]📝 Registrar nuevo préstamo[/bold cyan]"))
 
-    base_dir=os.path.dirname(filepath)
-    archivo_prestamo=os.path.join(BASE_DIR,"prestamo.json")
-    archivo_usuario=os.path.join(BASE_DIR,"usuario.json")
-    archivo_libro=os.path.join(BASE_DIR,"libro.json")
+    base_dir=os.path.dirname(filepath) # noqa: F841
+    archivo_prestamo=os.path.join(BASE_DIR,"prestamo.json") # noqa: F841
+    archivo_usuario=os.path.join(BASE_DIR,"usuario.json") # noqa: F841
+    archivo_libro=os.path.join(BASE_DIR,"libro.json") # noqa: F841
 
 
 

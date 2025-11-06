@@ -1,0 +1,10 @@
+[
+    {
+        "id_prestamo": 1,
+        "id_usuario": "123",
+        "id_libro": "12",
+        "fecha_prestamo": "2025-11-06",
+        "fecha_devolucion_esperada": "2025-11-05",
+        "estado": "devuelto"
+    }
+]
